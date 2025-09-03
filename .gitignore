@@ -1,3 +1,5 @@
 /st_mathlive/frontend/node_modules/
 /st_mathlive/frontend/.idea/
 /.idea/
+/dist/
+/streamlit_mathlive.egg-info/

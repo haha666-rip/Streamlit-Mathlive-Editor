@@ -60,7 +60,6 @@ class Streamlit_mathlive extends StreamlitComponentBase {
       { value: evt.target.value, tex: this.state.upright ? "\\mathrm{" + evt.target.value + "}" : evt.target.value  , mathml: window.MathJax.tex2mml(this.state.upright ? "\\mathrm{" + evt.target.value + "}" : evt.target.value,{em: 14, ex: 7, display: true})},
       () => Streamlit.setComponentValue([this.state.tex,this.state.mathml])
     )
-    this.mf.current.value = this.state.value
 
     if(typeof window.MathJax !== "undefined"){
 	    window.MathJax.typesetClear()

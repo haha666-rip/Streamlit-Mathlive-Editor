@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="streamlit-mathlive",
-    version="0.0.1",
+    version="0.0.3",
     author="Sina Golchi",
     author_email="sinagolchi@gmail.com",
     description="A WYSWYG math expression editor for Streamlit using MathLive mathfield and on-screen keyboard.",
