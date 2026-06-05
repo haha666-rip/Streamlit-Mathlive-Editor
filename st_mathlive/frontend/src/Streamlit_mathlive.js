@@ -2,6 +2,34 @@ import './Streamlit_mathlive.css'
 import React from 'react'
 import {Streamlit, StreamlitComponentBase, withStreamlitConnection } from "streamlit-component-lib"
 
+const getTex = (value, upright) => (upright ? `\\mathrm{${value}}` : value)
+
+const renderPreviewHtml = (value, upright) => {
+  const mathjax = typeof window !== 'undefined' ? window.MathJax : undefined
+  const tex = getTex(value, upright)
+
+  if (mathjax && typeof mathjax.tex2chtml === 'function') {
+    const node = mathjax.tex2chtml(tex, { em: 14, ex: 7, display: true })
+    return node && typeof node.outerHTML === 'string' ? node.outerHTML : ''
+  }
+
+  if (mathjax && typeof mathjax.tex2mml === 'function') {
+    return mathjax.tex2mml(tex, { em: 14, ex: 7, display: true })
+  }
+
+  return tex
+}
+
+const renderMathML = (value, upright) => {
+  const mathjax = typeof window !== 'undefined' ? window.MathJax : undefined
+  const tex = getTex(value, upright)
+
+  if (mathjax && typeof mathjax.tex2mml === 'function') {
+    return mathjax.tex2mml(tex, { em: 14, ex: 7, display: true })
+  }
+
+  return ''
+}
 
 // Use &#123; and &#125; to escape { and } in JSX
 
@@ -10,7 +38,19 @@ class Streamlit_mathlive extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.mf = React.createRef()
-    this.state = {upright:this.props.args['upright'], value:this.props.args['value'],tex:this.props.args['value'], mathml:window.MathJax.tex2mml(this.props.args['value'],{em: 14, ex: 7, display: true})}
+
+    const tex = getTex(this.props.args['value'], this.props.args['upright'])
+    const mathml = renderMathML(this.props.args['value'], this.props.args['upright'])
+    const previewHtml = renderPreviewHtml(this.props.args['value'], this.props.args['upright'])
+
+    this.state = {
+      upright: this.props.args['upright'],
+      value: this.props.args['value'],
+      tex,
+      mathml,
+      previewHtml,
+    }
+
 	if (this.props.args['edit']){
 	Streamlit.setComponentValue([this.state.tex,this.state.mathml])}
 	this.edit = this.props.args['edit']
@@ -56,9 +96,13 @@ class Streamlit_mathlive extends StreamlitComponentBase {
   }
 
   change_val = (evt) => {
+    const tex = getTex(evt.target.value, this.state.upright)
+    const mathml = renderMathML(evt.target.value, this.state.upright)
+    const previewHtml = renderPreviewHtml(evt.target.value, this.state.upright)
+
      this.setState(
-      { value: evt.target.value, tex: this.state.upright ? "\\mathrm{" + evt.target.value + "}" : evt.target.value  , mathml: window.MathJax.tex2mml(this.state.upright ? "\\mathrm{" + evt.target.value + "}" : evt.target.value,{em: 14, ex: 7, display: true})},
-      () => Streamlit.setComponentValue([this.state.tex,this.state.mathml])
+      { value: evt.target.value, tex, mathml, previewHtml },
+      () => Streamlit.setComponentValue([this.state.tex, this.state.mathml])
     )
 
     if(typeof window.MathJax !== "undefined"){
@@ -68,11 +112,14 @@ class Streamlit_mathlive extends StreamlitComponentBase {
   }
   
   handle_check = () => {
+    const upright = !this.state.upright
+    const tex = getTex(this.state.value, upright)
+    const mathml = renderMathML(this.state.value, upright)
+    const previewHtml = renderPreviewHtml(this.state.value, upright)
+
 	this.setState(
-      {upright:!this.state.upright})
-	this.setState(
-      {tex: this.state.upright ? "\\mathrm{" + this.state.value + "}": this.state.value , mathml: window.MathJax.tex2mml(this.state.upright ? "\\mathrm{" + this.state.value + "}" : this.state.value ,{em: 14, ex: 7, display: true})},
-      () => Streamlit.setComponentValue([this.state.tex,this.state.mathml])
+      {upright, tex, mathml, previewHtml},
+      () => Streamlit.setComponentValue([this.state.tex, this.state.mathml])
     )
   }
   
