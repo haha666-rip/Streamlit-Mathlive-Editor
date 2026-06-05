@@ -145,8 +145,8 @@ class Streamlit_mathlive extends StreamlitComponentBase {
             <h4>{this.state.upright}</h4>
             {this.props.args['mathml_preview'] ? (
             <div>
-            <h5>Render preview of MathML</h5>
-            <h2 dangerouslySetInnerHTML={{__html: this.state.mathml}}/>
+            <h5>Render preview</h5>
+            <h2 dangerouslySetInnerHTML={{__html: this.state.previewHtml || this.state.mathml || this.state.tex}}/>
             </div>):(<div></div>)}
             <break/>
         </div>
