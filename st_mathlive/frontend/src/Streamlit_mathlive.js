@@ -81,7 +81,9 @@ class Streamlit_mathlive extends StreamlitComponentBase {
 	if (this.props.args['edit']) {
 		this.mf.current.smartFence = true
 		this.mf.current.mathVirtualKeyboardPolicy = "sandboxed";
-		window.mathVirtualKeyboard.visible = true;
+    if (typeof window !== 'undefined' && window.mathVirtualKeyboard) {
+      window.mathVirtualKeyboard.visible = true;
+    }
 		// This could be an `onInput` handler, but this is an alternative
 		this.mf.current.addEventListener('input', (evt) => {
 		  // When the return key is pressed, play a sound

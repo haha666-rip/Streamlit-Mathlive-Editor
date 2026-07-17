@@ -70,7 +70,15 @@ def mathfield(title="Eqn", value="3+2", enable_edit=True, upright=True, mathml_p
     #
     # "default" is a special argument that specifies the initial return
     # value of the component before the user has interacted with it.
-    component_value = _component_func(title=title, value=value, edit=enable_edit, upright=upright, mathml_preview=True, key=key, default=[None, None])
+    component_value = _component_func(
+        title=title,
+        value=value,
+        edit=enable_edit,
+        upright=upright,
+        mathml_preview=mathml_preview,
+        key=key,
+        default=[None, None],
+    )
 
     # We could modify the value returned from the component if we wanted.
     # There's no need to do this in our simple example - but it's an option.
